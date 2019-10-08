@@ -1,0 +1,81 @@
+{
+  "name": "contest-vote-counter",
+  "version": "0.0.1",
+  "description": "It allows a youtuber to count votes for his contest",
+  "main": "dist/src/app.js",
+  "bin": {
+    "@deviad/vote-counter": "bin/vote-counter",
+    "vote-counter": "bin/vote-counter"
+  },
+  "scripts": {
+    "watch": "cross-env NODE_ENV=development nodemon -e ts,twig,scss -x ts-node --no-cache src/app.ts",
+    "watch:debug": "cross-env NODE_ENV=development nodemon -e ts -x node -r ts-node/register --inspect-brk=localhost:9222 src/app.ts",
+    "build": "cross-env rimraf -rf ./dist && cross-env tsc",
+    "build:webpack": "node node_modules/webpack/bin/webpack.js --config config/webpack.config.js && npm link",
+    "start:dev": "ts-node --no-cache src/app.ts",
+    "start:fwp": "cross-env node dist/cli.js",
+    "start:tsnode": "cross-env ts-node src/app.ts",
+    "start": "cross-env rimraf -rf ./dist && cross-env tsc && cross-env node dist/src/app.js",
+    "start:staging": "cross-env NODE_ENV=staging ts-node src/app.ts",
+    "tslint-check": "cross-env tslint-config-prettier-check ./tslint.json",
+    "test": "cross-env echo \"Error: no test specified\" && exit 1",
+    "prettify": "cross-env prettier --write '{src,typings}/**/*.ts'"
+  },
+  "devDependencies": {
+    "@types/clear": "^0.1.0",
+    "@types/figlet": "^1.2.0",
+    "@types/lodash": "^4.14.119",
+    "@types/minimist": "^1.2.0",
+    "@types/node": "^10.12.18",
+    "@types/puppeteer": "^1.11.1",
+    "@types/request": "^2.48.1",
+    "app-root-path": "^2.2.1",
+    "cross-env": "^5.2.0",
+    "figlet-loader": "^4.0.1",
+    "prettier": "^1.16.3",
+    "rimraf": "^2.6.3",
+    "ts-helpers": "^1.1.2",
+    "ts-node": "^7.0.1",
+    "tslib": "^1.9.3",
+    "tslint": "^5.12.0",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.7.0-dev.20191006",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "clear": "^0.1.0",
+    "commander": "^3.0.2",
+    "esm": "^3.2.25",
+    "figlet": "^1.2.4",
+    "lodash": "^4.17.11",
+    "node-yaml-config": "0.0.5",
+    "nodemon": "^1.18.9",
+    "progress": "^2.0.3",
+    "puppeteer": "^1.11.0",
+    "puppeteer-firefox": "^0.4.2",
+    "reflect-metadata": "^0.1.12",
+    "request": "^2.88.0",
+    "ts-loader": "^6.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "the repositories url"
+  },
+  "author": "Davide Pugliese <deviad@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "scraper",
+    "udemy"
+  ],
+  "homepage": "",
+  "bugs": {
+    "url": ""
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "types": "dist/typings/index.d.ts"
+}
