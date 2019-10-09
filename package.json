@@ -11,9 +11,7 @@
     "watch": "cross-env NODE_ENV=development nodemon -e ts,twig,scss -x ts-node --no-cache src/app.ts",
     "watch:debug": "cross-env NODE_ENV=development nodemon -e ts -x node -r ts-node/register --inspect-brk=localhost:9222 src/app.ts",
     "build": "cross-env rimraf -rf ./dist && cross-env tsc",
-    "build:webpack": "node node_modules/webpack/bin/webpack.js --config config/webpack.config.js && npm link",
     "start:dev": "ts-node --no-cache src/app.ts",
-    "start:fwp": "cross-env node dist/cli.js",
     "start:tsnode": "cross-env ts-node src/app.ts",
     "start": "cross-env rimraf -rf ./dist && cross-env tsc && cross-env node dist/src/app.js",
     "start:staging": "cross-env NODE_ENV=staging ts-node src/app.ts",
@@ -31,7 +29,6 @@
     "@types/request": "^2.48.1",
     "app-root-path": "^2.2.1",
     "cross-env": "^5.2.0",
-    "figlet-loader": "^4.0.1",
     "prettier": "^1.16.3",
     "rimraf": "^2.6.3",
     "ts-helpers": "^1.1.2",
@@ -39,9 +36,7 @@
     "tslib": "^1.9.3",
     "tslint": "^5.12.0",
     "tslint-config-prettier": "^1.17.0",
-    "typescript": "^3.7.0-dev.20191006",
-    "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.9"
+    "typescript": "^3.7.0-dev.20191006"
   },
   "dependencies": {
     "chalk": "^2.4.2",
@@ -56,8 +51,7 @@
     "puppeteer": "^1.11.0",
     "puppeteer-firefox": "^0.4.2",
     "reflect-metadata": "^0.1.12",
-    "request": "^2.88.0",
-    "ts-loader": "^6.2.0"
+    "request": "^2.88.0"
   },
   "repository": {
     "type": "git",
