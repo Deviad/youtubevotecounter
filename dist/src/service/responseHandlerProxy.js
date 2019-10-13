@@ -7,7 +7,7 @@ const responseHandler_1 = __importDefault(require("./responseHandler"));
 const responseHandlerProxy = (page) => new Promise((resolve, reject) => {
     try {
         // @ts-ignore
-        page.on('response', responseHandler_1.default(resolve, reject));
+        page.on('response', responseHandler_1.default(resolve, reject, page));
     }
     catch (err) {
         reject(err);

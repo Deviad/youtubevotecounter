@@ -9,12 +9,14 @@ exports.default = async ({ authorName, url }) => {
     try {
         const page = ServiceContainer_1.default.getInstance().getService("Page");
         await page.goto(encodeURI(url));
+        const cookies = await page.cookies();
+        let bottomNotReached = [true];
         // if (!isEmpty(await page.evaluate(() => document.querySelector('[id="container"]')))) {
         responseHandlerProxy_1.default(page);
         if (await page.waitForSelector('[role="dialog"] #main')) {
             await page.click('[role="dialog"] #main #dismiss-button');
         }
-        for (const elem of [...Array(10)]) {
+        while (bottomNotReached) {
             await page.evaluate((_) => window.scrollBy(0, window.innerHeight));
             console.log("figa");
             // const hostname = url.match(/(http:\/\/|https:\/\/)([\/w]{3}\.)?([\w]+)([\.])([\w]*)([\/]?)([?].*)?/)![3];
