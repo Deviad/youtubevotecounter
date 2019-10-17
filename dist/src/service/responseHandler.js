@@ -16,8 +16,8 @@ const responseHandler = (resolve, reject, page) => (respEvent) => {
             if (respEvent.url().match('(?=.*comment_service_ajax).*')) {
                 // @ts-ignore
                 const authorCommentPairs = await page.evaluate((_) => {
-                    // const links = document.querySelectorAll("#replies #text.style-scope.ytd-button-renderer");
-                    // // @ts-ignore
+                    const links = document.querySelectorAll("#replies #text.style-scope.ytd-button-renderer");
+                    // @ts-ignore
                     // const sleep = (time:number, cb: () => any) => {
                     //   return new Promise((resolve, reject) => {
                     //     try {
@@ -29,11 +29,9 @@ const responseHandler = (resolve, reject, page) => (respEvent) => {
                     // };
                     // (async (sleep) => {
                     //
-                    //   const increment = 1.618;
-                    //
                     //   for (let link of links) {
                     //     // @ts-ignore
-                    //     link.click();
+                    //     (link as HTMLAnchorElement).click();
                     //     await sleep(5000, ()=>{});
                     //   }
                     // })(sleep);

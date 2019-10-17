@@ -4,11 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ServiceContainer_1 = __importDefault(require("./service/ServiceContainer"));
-const puppeteer_1 = __importDefault(require("puppeteer"));
+// @ts-ignore
+const puppeteer_extra_1 = __importDefault(require("puppeteer-extra"));
+// @ts-ignore
+const puppeteer_extra_plugin_stealth_1 = __importDefault(require("puppeteer-extra-plugin-stealth"));
 const constantsMap_1 = __importDefault(require("./constantsMap"));
 const { USER_AGENT } = constantsMap_1.default;
+puppeteer_extra_1.default.use(puppeteer_extra_plugin_stealth_1.default());
 const browserInstanceBuilder = async () => {
-    ServiceContainer_1.default.getInstance().addService(await puppeteer_1.default.launch({
+    ServiceContainer_1.default.getInstance().addService(await puppeteer_extra_1.default.launch({
         args: [
             // '--headless',
             '--shm-size=1gb',

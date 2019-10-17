@@ -13,8 +13,8 @@ const responseHandler = (resolve: Function, reject: Function, page: Page) => (re
         // @ts-ignore
         const authorCommentPairs = await page.evaluate((_: unknown) => {
 
-          // const links = document.querySelectorAll("#replies #text.style-scope.ytd-button-renderer");
-          // // @ts-ignore
+          const links = document.querySelectorAll("#replies #text.style-scope.ytd-button-renderer");
+          // @ts-ignore
           // const sleep = (time:number, cb: () => any) => {
           //   return new Promise((resolve, reject) => {
           //     try {
@@ -26,11 +26,9 @@ const responseHandler = (resolve: Function, reject: Function, page: Page) => (re
           // };
           // (async (sleep) => {
           //
-          //   const increment = 1.618;
-          //
           //   for (let link of links) {
           //     // @ts-ignore
-          //     link.click();
+          //     (link as HTMLAnchorElement).click();
           //     await sleep(5000, ()=>{});
           //   }
           // })(sleep);

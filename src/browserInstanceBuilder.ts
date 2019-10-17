@@ -1,10 +1,13 @@
 import ServiceContainer from "./service/ServiceContainer";
-import puppeteer from "puppeteer";
+// @ts-ignore
+import puppeteer from "puppeteer-extra";
+// @ts-ignore
+import pluginStealth from "puppeteer-extra-plugin-stealth";
 
 import {default as constants} from "./constantsMap";
 
 const {USER_AGENT} = constants;
-
+puppeteer.use(pluginStealth());
 const browserInstanceBuilder: ()=> Promise<void> = async () => {
   ServiceContainer.getInstance().addService(
     await puppeteer.launch({
