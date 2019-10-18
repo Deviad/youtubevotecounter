@@ -8,10 +8,7 @@ exports.default = async ({ authorName, url }) => {
     try {
         const page = ServiceContainer_1.default.getInstance().getService("Page");
         await page.goto(encodeURI(url));
-        const cookies = await page.cookies();
         let bottomNotReached = true;
-        // if (!isEmpty(await page.evaluate(() => document.querySelector('[id="container"]')))) {
-        // responseHandlerProxy(page);
         let count = 0;
         if (await page.waitForSelector('[role="dialog"] #main')) {
             await page.click('[role="dialog"] #main #dismiss-button');
@@ -40,7 +37,23 @@ exports.default = async ({ authorName, url }) => {
             }
             count = newELemCount;
         }
-        await page.click("#replies #text.style-scope.ytd-button-renderer");
+        await page.$$eval("#more-replies", async (links) => {
+            function sleep(time, cb = () => { }) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        setTimeout(() => resolve(cb()), time);
+                    }
+                    catch (err) {
+                        reject(console.log(err));
+                    }
+                });
+            }
+            for (var link of links) {
+                link.click();
+                console.log("HERE I AM");
+                await sleep(1000);
+            }
+        });
     }
     catch (err) {
         console.error(err.message);

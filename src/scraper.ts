@@ -1,18 +1,14 @@
 import ServiceContainer from "./service/ServiceContainer";
 import InputDTO from "./InputDTO";
+import sleep from "./sleep";
 
 export default async ({authorName, url}: InputDTO): Promise<void> => {
 
   try {
     const page = ServiceContainer.getInstance().getService("Page");
     await page.goto(encodeURI(url as string));
-    const cookies = await page.cookies();
     let bottomNotReached = true;
-    // if (!isEmpty(await page.evaluate(() => document.querySelector('[id="container"]')))) {
-    // responseHandlerProxy(page);
-
     let count = 0;
-
     if (await page.waitForSelector('[role="dialog"] #main')) {
       await page.click('[role="dialog"] #main #dismiss-button');
     }
@@ -41,8 +37,26 @@ export default async ({authorName, url}: InputDTO): Promise<void> => {
       }
       count = newELemCount;
     }
+    await page.$$eval("#more-replies", async (links: HTMLLinkElement[]) => {
 
-    await page.click("#replies #text.style-scope.ytd-button-renderer")
+
+      function sleep(time: number, cb: CallableFunction = ()=>{}) {
+        return new Promise((resolve, reject) => {
+          try {
+            setTimeout(() => resolve(cb()), time);
+          } catch (err) {
+            reject(console.log(err));
+          }
+        });
+      }
+
+      for (const link of links) {
+        link.click();
+        console.log("HERE I AM");
+        await sleep(1000);
+      }
+    });
+
 
   } catch (err) {
     console.error(err.message)
