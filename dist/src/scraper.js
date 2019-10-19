@@ -10,54 +10,58 @@ exports.default = async ({ authorName, url }) => {
         await page.goto(encodeURI(url));
         let bottomNotReached = true;
         let count = 0;
-        if (await page.waitForSelector('[role="dialog"] #main')) {
-            await page.click('[role="dialog"] #main #dismiss-button');
-        }
-        while (bottomNotReached) {
-            await page.waitFor(1000);
-            await page.evaluate((_) => window.scrollBy(0, window.innerHeight));
-            console.log("figa");
-            // const hostname = url.match(/(http:\/\/|https:\/\/)([\/w]{3}\.)?([\w]+)([\.])([\w]*)([\/]?)([?].*)?/)![3];
-            // await page.screenshot({path: `${hostname}.png`});
-            const nodeElemsFactory = async () => await page.$$("#main.style-scope.ytd-comment-renderer");
-            const newELemCount = (await nodeElemsFactory()).length;
-            if (count === newELemCount) {
-                for (let i = 0; i < 4; i++) {
-                    const nowElementCount = (await nodeElemsFactory()).length;
-                    if (newELemCount !== nowElementCount) {
-                        break;
-                    }
-                    if (i == 3) {
-                        bottomNotReached = false;
-                        break;
-                    }
-                    await page.waitFor(1000);
-                    await page.evaluate((_) => window.scrollBy(0, window.innerHeight));
-                }
-            }
-            count = newELemCount;
-        }
-        await page.$$eval("#more-replies", async (links) => {
-            function sleep(time, cb = () => { }) {
-                return new Promise((resolve, reject) => {
-                    try {
-                        setTimeout(() => resolve(cb()), time);
-                    }
-                    catch (err) {
-                        reject(console.log(err));
-                    }
-                });
-            }
-            for (var link of links) {
-                link.click();
-                console.log("HERE I AM");
-                await sleep(1000);
-            }
-        });
+        await clickOnPrivacyDialog(page);
+        await displayAllComments(bottomNotReached, page, count);
+        await clickOnMoreRepliesButtons(page);
     }
     catch (err) {
         console.error(err.message);
     }
-    // }
 };
+async function displayAllComments(bottomNotReached, page, count) {
+    while (bottomNotReached) {
+        await page.waitFor(1000);
+        await page.evaluate((_) => window.scrollBy(0, window.innerHeight));
+        const nodeElemsFactory = async () => await page.$$("#main.style-scope.ytd-comment-renderer");
+        const newELemCount = (await nodeElemsFactory()).length;
+        if (count === newELemCount) {
+            for (let i = 0; i < 4; i++) {
+                const nowElementCount = (await nodeElemsFactory()).length;
+                if (newELemCount !== nowElementCount) {
+                    break;
+                }
+                if (i == 3) {
+                    bottomNotReached = false;
+                    break;
+                }
+                await page.waitFor(1000);
+                await page.evaluate((_) => window.scrollBy(0, window.innerHeight));
+            }
+        }
+        count = newELemCount;
+    }
+}
+async function clickOnMoreRepliesButtons(page) {
+    await page.$$eval("#more-replies", async (links) => {
+        function sleep(time, cb = () => { }) {
+            return new Promise((resolve, reject) => {
+                try {
+                    setTimeout(() => resolve(cb()), time);
+                }
+                catch (err) {
+                    reject(console.log(err));
+                }
+            });
+        }
+        for (const link of links) {
+            link.click();
+            await sleep(1000);
+        }
+    });
+}
+async function clickOnPrivacyDialog(page) {
+    if (await page.waitForSelector('[role="dialog"] #main')) {
+        await page.click('[role="dialog"] #main #dismiss-button');
+    }
+}
 //# sourceMappingURL=scraper.js.map
