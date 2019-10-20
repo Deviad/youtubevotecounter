@@ -2,8 +2,17 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const ServiceContainer_1 = __importDefault(require("./service/ServiceContainer"));
+const fs = __importStar(require("fs"));
+const root = require('app-root-path').path;
 exports.default = async ({ authorName, url }) => {
     try {
         const page = ServiceContainer_1.default.getInstance().getService("Page");
@@ -13,11 +22,49 @@ exports.default = async ({ authorName, url }) => {
         await clickOnPrivacyDialog(page);
         await displayAllComments(bottomNotReached, page, count);
         await clickOnMoreRepliesButtons(page);
+        await writeVotesOnFile(authorName, page);
     }
     catch (err) {
         console.error(err.message);
     }
 };
+async function writeVotesOnFile(authorName, page) {
+    const path = `${root}/votes.json`;
+    if (!fs.existsSync(path)) {
+        fs.writeFileSync(path, '');
+    }
+    let votes = [];
+    for await (const vote of getVotesByAuthor(authorName, page)) {
+        console.log(vote);
+        votes.push(vote);
+    }
+    fs.appendFileSync(path, JSON.stringify(votes));
+}
+async function* getVotesByAuthor(authorName, page) {
+    for (const reply of await getAllReplies(authorName, page)) {
+        if (reply.author == authorName && reply.text.match(/^(.*)(>>)(.*)(?=[+-])(.*)(\d+)$/)) {
+            yield reply;
+        }
+    }
+}
+async function getAllReplies(author, page) {
+    return await page.evaluate((_) => {
+        var _a, _b;
+        const replyBoxes = document.querySelectorAll("#loaded-replies");
+        let replies = [];
+        for (const box of replyBoxes) {
+            // @ts-ignore
+            for (const innerBox of box.children) {
+                // @ts-ignore
+                let replyAuthor = (_a = innerBox.querySelector("#body #main #header #header-author #author-text")) === null || _a === void 0 ? void 0 : _a.innerText.trim();
+                // @ts-ignore
+                let replyText = (_b = innerBox.querySelector("#body #main #expander #content #content-text")) === null || _b === void 0 ? void 0 : _b.innerText.trim();
+                replies = [...replies, { author: replyAuthor, text: replyText }];
+            }
+        }
+        return replies;
+    });
+}
 async function displayAllComments(bottomNotReached, page, count) {
     while (bottomNotReached) {
         await page.waitFor(1000);
@@ -43,7 +90,8 @@ async function displayAllComments(bottomNotReached, page, count) {
 }
 async function clickOnMoreRepliesButtons(page) {
     await page.$$eval("#more-replies", async (links) => {
-        function sleep(time, cb = () => { }) {
+        function sleep(time, cb = () => {
+        }) {
             return new Promise((resolve, reject) => {
                 try {
                     setTimeout(() => resolve(cb()), time);
