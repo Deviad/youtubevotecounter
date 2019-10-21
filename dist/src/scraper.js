@@ -13,6 +13,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ServiceContainer_1 = __importDefault(require("./service/ServiceContainer"));
 const fs = __importStar(require("fs"));
 const root = require('app-root-path').path;
+const path = `${root}/votes.csv`;
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csvWriter = createCsvWriter({
+    path: path,
+    header: [
+        { id: 'user', title: 'USER' },
+        { id: 'score', title: 'SCORE' }
+    ]
+});
 exports.default = async ({ authorName, url }) => {
     try {
         const page = ServiceContainer_1.default.getInstance().getService("Page");
@@ -28,22 +37,35 @@ exports.default = async ({ authorName, url }) => {
         console.error(err.message);
     }
 };
+const promisifiedWriter = (records) => new Promise((resolve, reject) => {
+    try {
+        csvWriter.writeRecords(records) // returns a promise
+            .then(() => {
+            resolve();
+        });
+    }
+    catch (err) {
+        reject(console.log(err));
+    }
+});
 async function writeVotesOnFile(authorName, page) {
-    const path = `${root}/votes.json`;
     if (!fs.existsSync(path)) {
         fs.writeFileSync(path, '');
     }
-    let votes = [];
     for await (const vote of getVotesByAuthor(authorName, page)) {
         console.log(vote);
-        votes.push(vote);
+        await promisifiedWriter(vote);
     }
-    fs.appendFileSync(path, JSON.stringify(votes));
+    // fs.appendFileSync(path, JSON.stringify(votes))
 }
 async function* getVotesByAuthor(authorName, page) {
     for (const reply of await getAllReplies(authorName, page)) {
         if (reply.author == authorName && reply.text.match(/^(.*)(>>)(.*)(?=[+-])(.*)(\d+)$/)) {
-            yield reply;
+            const splitTextForUser = reply.text.split(">>");
+            const splitTextForVote = reply.text.split("+");
+            const user = splitTextForUser[0].trim();
+            const score = splitTextForVote[splitTextForVote.length - 1].trim();
+            yield [{ user, score }];
         }
     }
 }
