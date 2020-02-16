@@ -1,10 +1,5 @@
-import chalk from 'chalk';
-import clear from 'clear';
-import figlet from 'figlet';
 import program from 'commander';
 import scraper from './scraper';
-import {default as container} from "./service/ServiceContainer";
-import * as puppeteer from "puppeteer";
 
 import browserInstanceBuilder from "./browserInstanceBuilder";
 import pageInstanceBuilder from "./pageInstanceBuilder";

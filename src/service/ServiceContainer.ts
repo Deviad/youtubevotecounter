@@ -1,11 +1,11 @@
-import { IIndexable } from 'typings';
+import {IIndexable} from 'typings';
 
 class ServiceContainer {
+  private static instance: ServiceContainer;
   private services: IIndexable = {};
 
-  private static instance: ServiceContainer;
-
-  private constructor() {}
+  private constructor() {
+  }
 
   /** Get an instance of the service container
    * @returns ServiceContainer

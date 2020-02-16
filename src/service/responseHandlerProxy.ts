@@ -1,4 +1,4 @@
-import {Cookie, Page} from "puppeteer";
+import {Page} from "puppeteer";
 import responseHandler from "./responseHandler";
 
 const responseHandlerProxy = (page: Page) => new Promise((resolve, reject) => {

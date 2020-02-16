@@ -2,6 +2,7 @@ import ServiceContainer from "./service/ServiceContainer";
 import InputDTO from "./InputDTO";
 import {ElementHandle, Page} from "puppeteer";
 import * as fs from "fs";
+import {IIndexable} from "typings/index";
 
 const root = require('app-root-path').path;
 const path = `${root}/votes.csv`;
@@ -55,7 +56,7 @@ async function writeVotesOnFile(authorName: String, page: Page) {
   }
 }
 
-async function* getVotesByAuthor(authorName: String, page: Page) {
+async function* getVotesByAuthor(authorName: String, page: Page): AsyncIterableIterator<Array<IIndexable>> {
   for (const reply of await getAllReplies(authorName, page)) {
     if (reply.author == authorName && (reply.text as String).match(/^(.*)(>>)(.*)(?=[+-])(.*)(\d+)$/)) {
       const splitTextForUser = reply.text.split(">>");

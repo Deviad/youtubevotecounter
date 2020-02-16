@@ -1,7 +1,6 @@
 import Response, {Page} from "puppeteer";
 import * as fs from "fs";
 import {IIndexable} from "typings/index";
-import sleep from "../sleep";
 
 const root = require('app-root-path').path;
 const responseHandler = (resolve: Function, reject: Function, page: Page) => (respEvent: Response) => {
