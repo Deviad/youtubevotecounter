@@ -14,7 +14,7 @@ For a simple initial run you can use: `yarn start:tsnode -a <some_user_name> -u 
 inside a page you will leave a reply under under the most funny,engaging/interesting comments of your users.
 For every one of this comment you can leave a vote by writing something like: 
 `<name_of_the_user_being_voted> >> +<vote>`
-This way you can automatize contests and you can loyalize your users.
+This way you can automatize contests and you can loyalize your users rewarding them with some awards for being engaged, etc.
 
 ## Other things you can learn from this repo if interested in programming:
 - Generator functions; 
